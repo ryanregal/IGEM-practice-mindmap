@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+  <fonts>
+    <font name="文泉驿微米黑" className="FskyFont_wqy_microhei" url="./files/fonts/font-0-0-2022127163726893.swf"/>
+    <font name="Times New Roman" className="FskyFont_times" url="./files/fonts/font-1-0-2022127163726894.swf"/>
+    <font name="Times New Roman" className="FskyFont_timesbd" url="./files/fonts/font-1-1-2022127163726894.swf"/>
+    <font name="Times New Roman" className="FskyFont_timesbi" url="./files/fonts/font-1-2-2022127163726894.swf"/>
+    <font name="Times New Roman" className="FskyFont_timesi" url="./files/fonts/font-1-3-2022127163726895.swf"/>
+    <font name="Webding" className="" url="./files/fonts/font-2-0-2022127163726896.swf"/>
+    <font name="Algerian" className="FskyFont_ALGER" url="./files/fonts/font-3-0-2022127163726896.swf"/>
+    <font name="Droid Sans" className="FskyFont_droidsans" url="./files/fonts/font-4-0-2022127163726897.swf"/>
+    <font name="FontAwesome" className="" url="./files/fonts/font-5-0-2022127163726897.swf"/>
+  </fonts>
+</data>
