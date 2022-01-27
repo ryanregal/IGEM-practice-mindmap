@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <data>
   <fonts>
-    <font name="Droid Sans" className="FskyFont_droidsans" url="./files/fonts/font-0-0-2022127171926340.swf"/>
-    <font name="Algerian" className="FskyFont_ALGER" url="./files/fonts/font-1-0-2022127171926341.swf"/>
-    <font name="Webding" className="" url="./files/fonts/font-2-0-2022127171926341.swf"/>
-    <font name="FontAwesome" className="" url="./files/fonts/font-3-0-2022127171926341.swf"/>
-    <font name="Times New Roman" className="FskyFont_times" url="./files/fonts/font-4-0-2022127171926341.swf"/>
-    <font name="Times New Roman" className="FskyFont_timesbd" url="./files/fonts/font-4-1-2022127171926342.swf"/>
-    <font name="Times New Roman" className="FskyFont_timesbi" url="./files/fonts/font-4-2-2022127171926342.swf"/>
-    <font name="Times New Roman" className="FskyFont_timesi" url="./files/fonts/font-4-3-2022127171926342.swf"/>
+    <font name="Droid Sans" className="FskyFont_droidsans" url="./files/fonts/font-0-0-2022127183253107.swf"/>
+    <font name="Algerian" className="FskyFont_ALGER" url="./files/fonts/font-1-0-2022127183253108.swf"/>
+    <font name="Webding" className="" url="./files/fonts/font-2-0-2022127183253109.swf"/>
+    <font name="FontAwesome" className="" url="./files/fonts/font-3-0-2022127183253110.swf"/>
+    <font name="Times New Roman" className="FskyFont_times" url="./files/fonts/font-4-0-2022127183253110.swf"/>
+    <font name="Times New Roman" className="FskyFont_timesbd" url="./files/fonts/font-4-1-2022127183253110.swf"/>
+    <font name="Times New Roman" className="FskyFont_timesbi" url="./files/fonts/font-4-2-2022127183253111.swf"/>
+    <font name="Times New Roman" className="FskyFont_timesi" url="./files/fonts/font-4-3-2022127183253111.swf"/>
   </fonts>
 </data>
