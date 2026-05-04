@@ -43,30 +43,75 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  const correctIcon = `
+    <svg class="w-16 h-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+    </svg>
+  `
+
+  const wrongIcon = `
+    <svg class="w-16 h-16 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+  `
+
+  function setFrontMessage(card, message = '') {
+    let messageEl = card.querySelector('.quiz-front-message')
+    const button = card.querySelector('[data-input]')
+
+    if (!messageEl && button) {
+      messageEl = document.createElement('p')
+      messageEl.className = 'quiz-front-message mt-3 text-sm font-medium text-red-600'
+      button.insertAdjacentElement('beforebegin', messageEl)
+    }
+
+    if (messageEl) {
+      messageEl.textContent = message
+      messageEl.classList.toggle('hidden', !message)
+    }
+  }
+
   function updateCardBack(cardId, inputName, correctValue, correctText, explanation) {
     const card = document.getElementById(cardId)
-    if (!card) return
+    if (!card) return false
 
     const selected = document.querySelector(`input[name="${inputName}"]:checked`)
+    if (!selected) {
+      setFrontMessage(card, 'Please choose an answer before checking.')
+      return false
+    }
+
     const feedbackText = card.querySelector('.quiz-back-feedback')
     const correctLabel = card.querySelector('.quiz-back-correct')
+    const resultTitle = card.querySelector('.quiz-result-title')
+    const resultIcon = card.querySelector('.quiz-result-icon')
+    const isCorrect = selected.value === correctValue
 
-    if (selected && selected.value === correctValue) {
-      correctLabel.textContent = `Correct: ${correctText}`
-      feedbackText.textContent = `Nice work! ${explanation}`
-      feedbackText.classList.remove('text-red-600')
-      feedbackText.classList.add('text-text-dark')
-    } else if (selected) {
-      correctLabel.textContent = `Correct: ${correctText}`
-      feedbackText.textContent = `That option is not the best choice. ${explanation}`
-      feedbackText.classList.remove('text-text-dark')
-      feedbackText.classList.add('text-red-600')
-    } else {
-      correctLabel.textContent = `Correct: ${correctText}`
-      feedbackText.textContent = `No answer selected. Choose one answer and flip the card again to check it.`
+    setFrontMessage(card)
+
+    if (resultIcon) {
+      resultIcon.innerHTML = isCorrect ? correctIcon : wrongIcon
+    }
+
+    if (resultTitle) {
+      resultTitle.textContent = isCorrect ? 'Correct!' : 'Not quite yet'
+      resultTitle.classList.toggle('text-green-600', isCorrect)
+      resultTitle.classList.toggle('text-red-600', !isCorrect)
+    }
+
+    if (correctLabel) {
+      correctLabel.textContent = `Correct answer: ${correctText}`
+    }
+
+    if (feedbackText) {
+      feedbackText.textContent = isCorrect
+        ? `Nice work! ${explanation}`
+        : `Good try. ${explanation} Keep going and complete the full quiz so you can check your overall flood preparedness.`
       feedbackText.classList.remove('text-red-600')
       feedbackText.classList.add('text-text-dark')
     }
+
+    return true
   }
 
   const quizCardOrder = ['card-1', 'card-2', 'card-3']
@@ -78,13 +123,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!card) return
       const isFront = !card.classList.contains('flipped')
-      card.classList.toggle('flipped')
 
       if (isFront && inputName) {
         const settings = Object.values(cardSettings).find(setting => setting.inputName === inputName)
         if (settings) {
-          updateCardBack(cardId, settings.inputName, settings.correctValue, settings.correctText, settings.explanation)
+          const canFlip = updateCardBack(cardId, settings.inputName, settings.correctValue, settings.correctText, settings.explanation)
+          if (!canFlip) return
         }
+
+        card.classList.add('flipped')
 
         const currentIndex = quizCardOrder.indexOf(cardId)
         const nextCardId = quizCardOrder[currentIndex + 1]
@@ -96,7 +143,16 @@ document.addEventListener('DOMContentLoaded', () => {
             nextButton?.focus()
           }, 300)
         }
+      } else {
+        card.classList.remove('flipped')
       }
+    })
+  })
+
+  document.querySelectorAll('.flip-card input[type="radio"]').forEach(input => {
+    input.addEventListener('change', () => {
+      const card = input.closest('.flip-card')
+      if (card) setFrontMessage(card)
     })
   })
 
@@ -105,8 +161,20 @@ document.addEventListener('DOMContentLoaded', () => {
     quizReset.addEventListener('click', () => {
       document.querySelectorAll('.flip-card').forEach(card => card.classList.remove('flipped'))
       document.querySelectorAll('input[type="radio"]').forEach(input => (input.checked = false))
+      document.querySelectorAll('.quiz-front-message').forEach(message => {
+        message.textContent = ''
+        message.classList.add('hidden')
+      })
+      document.querySelectorAll('.quiz-result-icon').forEach(icon => {
+        icon.innerHTML = correctIcon
+      })
+      document.querySelectorAll('.quiz-result-title').forEach(title => {
+        title.textContent = 'Correct!'
+        title.classList.remove('text-red-600')
+        title.classList.add('text-green-600')
+      })
       document.querySelectorAll('.quiz-back-feedback').forEach(feedback => {
-        feedback.textContent = 'Flip the card and choose an answer to check your response.'
+        feedback.textContent = 'Choose an answer and check your response.'
         feedback.classList.remove('text-red-600')
         feedback.classList.add('text-text-dark')
       })

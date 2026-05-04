@@ -3,14 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ENGR90051 - Prototype</title>
+    <title>ENGR90051 Q2 - Prototype</title>
     <link
       rel="icon"
       type="image/svg+xml"
       href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>"
     />
-    <script type="module" crossorigin src="./assets/index-BwkUm206.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-CXQrJ1PQ.css">
+    <script type="module" crossorigin src="/FloodRisk/assets/index-COgafjS5.js"></script>
+    <link rel="stylesheet" crossorigin href="/FloodRisk/assets/index-Bo6S1WsZ.css">
   </head>
   <body>
     <!-- Loading Animation -->
@@ -24,7 +24,7 @@
           loop
           playsinline
         >
-          <source src="./assets/Flood-BunJPTdF.mp4" type="video/mp4" />
+          <source src="/FloodRisk/assets/Flood-BunJPTdF.mp4" type="video/mp4" />
           Your browser does not support video playback.
         </video>
         <div class="loading-text">Connecting...</div>
@@ -108,7 +108,7 @@
             </p>
             <div class="video-wrapper mb-4 overflow-hidden rounded-lg relative">
               <img
-                src="./assets/video-preview-flood-basics-DGOQhwq9.jpg"
+                src="/FloodRisk/assets/video-preview-flood-basics-DGOQhwq9.jpg"
                 alt="Flood basics preview"
                 class="w-full aspect-video object-cover"
               />
@@ -151,7 +151,7 @@
             </p>
             <div class="video-wrapper mb-4 overflow-hidden rounded-lg relative">
               <img
-                src="./assets/video-preview-preparation-steps-ZjKWu3Yh.jpg"
+                src="/FloodRisk/assets/video-preview-preparation-steps-ZjKWu3Yh.jpg"
                 alt="Preparation steps preview"
                 class="w-full aspect-video object-cover"
               />
@@ -194,7 +194,7 @@
             </p>
             <div class="video-wrapper mb-4 overflow-hidden rounded-lg relative">
               <img
-                src="./assets/video-preview-mindset-response-DBnJbql5.jpg"
+                src="/FloodRisk/assets/video-preview-mindset-response-DBnJbql5.jpg"
                 alt="Mindset and response preview"
                 class="w-full aspect-video object-cover"
               />
@@ -287,7 +287,7 @@
                 <div class="flip-card-back p-6">
                   <div class="text-center">
                     <div class="check-mark-container mb-4">
-                      <div class="check-mark">
+                      <div class="quiz-result-icon check-mark">
                         <svg
                           class="w-16 h-16 text-green-500"
                           fill="none"
@@ -303,8 +303,13 @@
                         </svg>
                       </div>
                     </div>
-                    <p class="text-xl font-semibold mb-3 text-green-600">
+                    <p class="quiz-result-title text-xl font-semibold mb-3 text-green-600">
                       Correct!
+                    </p>
+                    <p
+                      class="quiz-back-correct text-primary text-lg font-semibold mb-2"
+                    >
+                      Correct: Move to higher ground immediately
                     </p>
                     <p class="quiz-back-feedback text-text-dark">
                       During a flood warning, moving quickly to higher ground
@@ -369,7 +374,7 @@
                 <div class="flip-card-back p-6">
                   <div class="text-center">
                     <div class="check-mark-container mb-4">
-                      <div class="check-mark">
+                      <div class="quiz-result-icon check-mark">
                         <svg
                           class="w-16 h-16 text-green-500"
                           fill="none"
@@ -385,8 +390,13 @@
                         </svg>
                       </div>
                     </div>
-                    <p class="text-xl font-semibold mb-3 text-green-600">
+                    <p class="quiz-result-title text-xl font-semibold mb-3 text-green-600">
                       Correct!
+                    </p>
+                    <p
+                      class="quiz-back-correct text-primary text-lg font-semibold mb-2"
+                    >
+                      Correct: Bottled water and first aid supplies
                     </p>
                     <p class="quiz-back-feedback text-text-dark">
                       A good flood emergency kit should include clean water,
@@ -450,8 +460,29 @@
                   </button>
                 </div>
                 <div class="flip-card-back p-6">
-                  <div>
-                    <p class="text-xl font-semibold mb-3">Answer</p>
+                  <div class="text-center">
+                    <div class="check-mark-container mb-4">
+                      <div class="quiz-result-icon check-mark">
+                        <svg
+                          class="w-16 h-16 text-green-500"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M5 13l4 4L19 7"
+                          ></path>
+                        </svg>
+                      </div>
+                    </div>
+                    <p
+                      class="quiz-result-title text-xl font-semibold mb-3 text-green-600"
+                    >
+                      Correct!
+                    </p>
                     <p
                       class="quiz-back-correct text-primary text-lg font-semibold mb-2"
                     >
