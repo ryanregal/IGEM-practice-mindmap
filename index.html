@@ -1,53 +1,303 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-  <title>Focusky</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flood Risk Gauge</title>
+
   <style>
-    html,
     body {
+      background: #262638;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      gap: 2rem;
+    }
+
+    .card {
+      background: #33334a;
+      padding: 2rem;
+      border-radius: 1rem;
+      text-align: center;
+      width: 420px;
+      box-shadow: 0 0 20px #0005;
+    }
+
+    .graph-container {
+      --size: 20rem;
+      --stroke-size: calc(var(--size) / 5);
+      --rating: 0;
+      position: relative;
+      display: inline-flex;
+      box-sizing: border-box;
+      margin: 1rem 0 2rem;
+    }
+
+    .half-donut {
+      width: var(--size);
+      height: calc(var(--size) / 2);
+      border-radius: var(--size) var(--size) 0 0;
+      position: relative;
       overflow: hidden;
+      filter: drop-shadow(0 0 0.3rem #0005);
+    }
+
+    .slice {
+      position: absolute;
       width: 100%;
       height: 100%;
-      margin: 0;
+      border-radius: var(--size) var(--size) 0 0;
+      border: var(--stroke-size) solid;
+      border-bottom: none;
+      transform-origin: 50% 100%;
+      box-sizing: border-box;
+    }
+
+    .slice span {
+      position: absolute;
+      left: -3.2rem;
+      top: 2.3rem;
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: white;
+      transform-origin: center;
+      white-space: nowrap;
+    }
+
+    .slice:nth-child(1) {
+      border-color: #509d55;
+      transform: rotate(0deg);
+    }
+
+    .slice:nth-child(1) span {
+      transform: rotate(0deg);
+    }
+
+    .slice:nth-child(2) {
+      border-color: #68ca6f;
+      transform: rotate(36deg);
+    }
+
+    .slice:nth-child(2) span {
+      transform: rotate(-36deg);
+    }
+
+    .slice:nth-child(3) {
+      border-color: #f19c4b;
+      transform: rotate(72deg);
+    }
+
+    .slice:nth-child(3) span {
+      transform: rotate(-72deg);
+    }
+
+    .slice:nth-child(4) {
+      border-color: #ff6259;
+      transform: rotate(108deg);
+    }
+
+    .slice:nth-child(4) span {
+      transform: rotate(-108deg);
+    }
+
+    .slice:nth-child(5) {
+      border-color: #d72e2c;
+      transform: rotate(144deg);
+    }
+
+    .slice:nth-child(5) span {
+      transform: rotate(-144deg);
+    }
+
+    .marker {
+      position: absolute;
+      z-index: 2;
+      left: 50%;
+      bottom: 0;
+      width: calc(var(--size) / 10);
+      height: calc(var(--size) / 10);
+      border: calc(var(--size) / 32) solid white;
+      border-radius: 50%;
+      background: #222;
+      transform: translate(-50%, 50%)
+        rotate(calc(-90deg + (var(--rating) * 36deg)));
+      transform-origin: 50% 50%;
+      transition: 0.4s ease;
+    }
+
+    .marker::before {
+      content: "";
+      position: absolute;
+      border: calc(var(--size) / 30) solid transparent;
+      border-right: calc(var(--size) * 0.42) solid white;
+      left: 0;
+      bottom: 0;
+      transform: translate(-100%, 50%);
+      transform-origin: 100% 50%;
+      filter: drop-shadow(-0.1rem 0 0.2rem #0008);
+    }
+
+    .info {
+      background: #24243a;
+      border-radius: 0.75rem;
+      padding: 1rem;
+      text-align: left;
+      line-height: 1.6;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      font-weight: bold;
+      margin-top: 0.5rem;
+      background: #f19c4b;
+      color: #111;
+    }
+
+    button {
+      border: none;
+      background: #7c3aed;
+      color: white;
+      padding: 0.8rem 1.2rem;
+      border-radius: 0.6rem;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    button:hover {
+      background: #6d28d9;
     }
   </style>
 </head>
 
 <body>
-      <script>
-      window.FOCUSKY_CONFIG = {
-        zipUrl: "lib/zip/zip.js",
-        zipWorkerScriptsPath: "lib/zip/",
-        symbolUrl: {
-          fontawesome: "files/assets/fontawesome-webfont.ttf",
-          webding: "files/assets/webdings.ttf"
-        },
-        paths: {
-		  echarts: "lib/echarts.min.js",
-          animations: (function() {
-            var files = {
-              hand: "handClick.png",
-              hand2: "handClick2.png",
-              bullet: "bullet.png",
-              colorBubbles: "colorBubbles.png",
-              transparentbubbles: "transparentbubbles.png",
-              mapleLeaf: "mapleLeaf.png",
-              magnifier: "magnifier.png"
-            };
+  <div class="card">
+    <h1>Flood Risk Gauge</h1>
 
-            var baseUrl = "files/assets/animationfiles/";
-            for (var name in files) {
-              files[name] = baseUrl + files[name];
-            }
-            return files;
-          })()
-        }
+    <div class="graph-container" id="gauge">
+      <div class="half-donut">
+        <div class="slice"><span>Minor</span></div>
+        <div class="slice"><span>Moderate</span></div>
+        <div class="slice"><span>Severe</span></div>
+        <div class="slice"><span>Extreme</span></div>
+        <div class="slice"><span>Critical</span></div>
+      </div>
+      <div class="marker"></div>
+    </div>
+
+    <div class="info">
+      <p><strong>Event:</strong> <span id="eventType">Loading...</span></p>
+      <p><strong>Severity:</strong> <span id="severity">Loading...</span></p>
+      <p><strong>Certainty:</strong> <span id="certainty">Loading...</span></p>
+      <p><strong>Urgency:</strong> <span id="urgency">Loading...</span></p>
+      <p><strong>Area:</strong> <span id="areaName">Loading...</span></p>
+      <p><strong>Valid until:</strong> <span id="expirationTime">Loading...</span></p>
+      <div class="badge" id="riskLabel">Loading...</div>
+    </div>
+
+    <br />
+    <button onclick="loadFloodAlert()">Refresh Flood Risk</button>
+  </div>
+
+  <script>
+    const severityToRating = {
+      UNKNOWN: 0,
+      MINOR: 1,
+      MODERATE: 2,
+      SEVERE: 3.5,
+      EXTREME: 5
+    };
+
+    const riskText = {
+      UNKNOWN: "Unknown Risk",
+      MINOR: "Minor Flood Risk",
+      MODERATE: "Moderate Flood Risk",
+      SEVERE: "Severe Flood Risk",
+      EXTREME: "Extreme Flood Risk"
+    };
+
+    async function fetchFloodAlert() {
+      // Demo data.
+      // Later, replace this with your own backend endpoint:
+      //
+      // const response = await fetch(
+      //   "/api/flood-alert?lat=-37.8136&lng=144.9631"
+      // );
+      // return await response.json();
+
+      return {
+        weatherAlerts: [
+          {
+            eventType: "FLASH_FLOOD",
+            severity: "SEVERE",
+            certainty: "LIKELY",
+            urgency: "IMMEDIATE",
+            areaName: "Melbourne, Victoria",
+            startTime: "2026-05-04T04:00:00Z",
+            expirationTime: "2026-05-04T10:30:00Z"
+          }
+        ],
+        regionCode: "AU"
       };
-    </script>
-  <script src="lib/focusky.min.js"></script>
-</body>
+    }
 
+    async function loadFloodAlert() {
+      const data = await fetchFloodAlert();
+
+      const alert = data.weatherAlerts?.[0];
+
+      if (!alert) {
+        updateGauge({
+          eventType: "No active flood alert",
+          severity: "UNKNOWN",
+          certainty: "UNKNOWN",
+          urgency: "UNKNOWN",
+          areaName: data.regionCode || "Unknown area",
+          expirationTime: "N/A"
+        });
+        return;
+      }
+
+      updateGauge(alert);
+    }
+
+    function updateGauge(alert) {
+      const severity = alert.severity || "UNKNOWN";
+      const rating = severityToRating[severity] ?? 0;
+
+      document
+        .getElementById("gauge")
+        .style
+        .setProperty("--rating", rating);
+
+      document.getElementById("eventType").textContent = alert.eventType || "N/A";
+      document.getElementById("severity").textContent = severity;
+      document.getElementById("certainty").textContent = alert.certainty || "N/A";
+      document.getElementById("urgency").textContent = alert.urgency || "N/A";
+      document.getElementById("areaName").textContent = alert.areaName || "N/A";
+      document.getElementById("expirationTime").textContent =
+        formatTime(alert.expirationTime);
+
+      document.getElementById("riskLabel").textContent =
+        riskText[severity] || "Unknown Risk";
+    }
+
+    function formatTime(timeString) {
+      if (!timeString || timeString === "N/A") return "N/A";
+
+      return new Date(timeString).toLocaleString("en-AU", {
+        dateStyle: "medium",
+        timeStyle: "short"
+      });
+    }
+
+    loadFloodAlert();
+  </script>
+</body>
 </html>
