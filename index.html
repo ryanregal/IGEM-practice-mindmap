@@ -85,6 +85,435 @@
       </div>
     </section>
 
+    
+  <!-- Flood Risk Gauge section -->
+  <section id="dashboard" class="py-16 bg-gradient-to-br from-white to-slate-50">
+    <div class="container-custom max-w-3xl">
+      <h2 class="text-4xl font-bold text-center mb-8">Live Flood Risk Gauge</h2>
+
+      <div class="bg-white p-8 rounded-lg shadow-md mx-auto">
+        <div class="flood-gauge-card">
+
+          <div class="graph-container mx-auto" id="gauge" style="--rating:0;">
+            <div class="half-donut">
+              <div class="slice"></div>
+              <div class="slice"></div>
+              <div class="slice"></div>
+              <div class="slice"></div>
+            </div>
+            <div class="marker"></div>
+          </div>
+
+          <div class="gauge-legend">
+            <div><span class="dot safe"></span>No Warning</div>
+            <div><span class="dot minor"></span>Minor</div>
+            <div><span class="dot moderate"></span>Moderate</div>
+            <div><span class="dot major"></span>Major</div>
+          </div>
+
+          <div class="mt-4 text-base text-text-dark">
+            <p><strong>Event:</strong> <span id="eventType">Loading...</span></p>
+            <p><strong>Flood Level:</strong> <span id="severity">Loading...</span></p>
+            <p><strong>Source:</strong> <span id="certainty">Loading...</span></p>
+            <p><strong>Action:</strong> <span id="urgency">Loading...</span></p>
+            <p><strong>Area:</strong> <span id="areaName">Loading...</span></p>
+            <p><strong>Issued:</strong> <span id="expirationTime">Loading...</span></p>
+            <div class="inline-block mt-2 px-3 py-1 rounded-full bg-slate-200 text-slate-700 font-semibold"
+              id="riskLabel">
+              Loading...
+            </div>
+          </div>
+
+          <div class="btn-row mt-4">
+            <button id="refreshGauge" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+              Refresh Flood Risk
+            </button>
+
+            <button id="testFloodGauge" class="bg-slate-700 text-white px-4 py-2 rounded-lg hover:bg-slate-800">
+              Test Flood Warning
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <style>
+      .flood-gauge-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+      }
+
+      .graph-container {
+        --size: 18rem;
+        --stroke-size: calc(var(--size) / 5);
+        --rating: 0;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        box-sizing: border-box;
+      }
+
+      .half-donut {
+        width: var(--size);
+        height: calc(var(--size) / 2);
+        border-radius: var(--size) var(--size) 0 0;
+        position: relative;
+        overflow: hidden;
+        margin: 0 auto;
+      }
+
+      .slice {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: var(--size) var(--size) 0 0;
+        border: var(--stroke-size) solid;
+        border-bottom: none;
+        transform-origin: 50% 100%;
+        box-sizing: border-box;
+      }
+
+
+
+
+      .slice:nth-child(1) {
+        border-color: #22c55e;
+        transform: rotate(0deg);
+      }
+
+      .slice:nth-child(2) {
+        border-color: #eab308;
+        transform: rotate(45deg);
+      }
+
+      .slice:nth-child(3) {
+        border-color: #f97316;
+        transform: rotate(90deg);
+      }
+
+      .slice:nth-child(4) {
+        border-color: #dc2626;
+        transform: rotate(135deg);
+      }
+
+      .gauge-legend {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-top: 0.5rem;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #111827;
+      }
+
+      .gauge-legend div {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+
+      .dot {
+        width: 0.8rem;
+        height: 0.8rem;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      .dot.safe {
+        background: #22c55e;
+      }
+
+      .dot.minor {
+        background: #eab308;
+      }
+
+      .dot.moderate {
+        background: #f97316;
+      }
+
+      .dot.major {
+        background: #dc2626;
+      }
+
+      .marker {
+        position: absolute;
+        z-index: 2;
+        left: 50%;
+        bottom: 0;
+
+        width: calc(var(--size) * 0.035);
+        height: calc(var(--size) * 0.40);
+
+        background: #2563eb;
+        border-radius: 999px;
+        box-shadow: 0 0.2rem 0.5rem #2563eb;
+
+        transform-origin: 50% 100%;
+        transform: translate(-50%, 0) rotate(calc(-90deg + (var(--rating) * 45deg) + 22.5deg));
+
+        transition: transform 0.45s ease;
+      }
+
+      .marker::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+
+        width: calc(var(--size) / 12);
+        height: calc(var(--size) / 12);
+
+        background: #2563eb;
+        border: calc(var(--size) / 40) solid whitesmoke;
+        border-radius: 50%;
+
+        transform: translate(-50%, 50%);
+      }
+
+      .mt-4.text-sm {
+        margin-top: 0.75rem;
+        text-align: left;
+        width: 100%;
+        max-width: 420px;
+        line-height: 1.7;
+      }
+
+      #riskLabel {
+        transition: all 0.3s ease;
+      }
+
+      .btn-row {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        width: 100%;
+      }
+
+      #refreshGauge,
+      #testFloodGauge {
+        transition: all 0.2s ease;
+      }
+
+      #refreshGauge:hover,
+      #testFloodGauge:hover {
+        transform: translateY(-1px);
+      }
+
+      @media (min-width: 768px) {
+        .graph-container {
+          --size: 22rem;
+        }
+      }
+    </style>
+
+    <script>
+      const BOM_VIC_WARNINGS_URL =
+        "https://corsproxy.io/?" + encodeURIComponent(
+          "https://reg.bom.gov.au/fwo/IDZ00066.warnings_land_vic.xml"
+        );
+
+      const severityToRating = {
+        SAFE: 0,
+        MINOR: 1,
+        MODERATE: 2,
+        MAJOR: 3
+      };
+
+      const riskText = {
+        SAFE: "No Active Flood Risk",
+        MINOR: "Minor Flood Warning",
+        MODERATE: "Moderate Flood Warning",
+        MAJOR: "Major Flood Warning"
+      };
+
+      async function fetchFloodAlert() {
+        const response = await fetch(BOM_VIC_WARNINGS_URL);
+
+        if (!response.ok) {
+          throw new Error(`BOM RSS error: ${response.status}`);
+        }
+
+        const xmlText = await response.text();
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(xmlText, "text/xml");
+
+        const items = [...xml.querySelectorAll("item")];
+
+        const activeFloodItem = items.find(item => {
+          const title = cleanText(item.querySelector("title")?.textContent || "");
+
+          return /flood/i.test(title) && !/cancellation/i.test(title);
+        });
+
+        if (!activeFloodItem) {
+          return {
+            status: "SAFE",
+            eventType: "No active flood warning",
+            severity: "No warning",
+            certainty: "BOM RSS",
+            urgency: "No action required",
+            areaName: "Melbourne",
+            expirationTime: "No active warning"
+          };
+        }
+
+        const title = cleanText(activeFloodItem.querySelector("title")?.textContent || "");
+        const pubDate = activeFloodItem.querySelector("pubDate")?.textContent || "";
+        const link = activeFloodItem.querySelector("link")?.textContent || "";
+
+        const severity = getFloodSeverity(title);
+
+        return {
+          status: severity,
+          eventType: title,
+          severity: formatSeverityLabel(severity),
+          certainty: "BOM RSS",
+          urgency: "Check official BOM warning",
+          areaName: extractAreaName(title),
+          expirationTime: formatTime(pubDate),
+          link
+        };
+      }
+
+      function getFloodSeverity(text) {
+        const lower = text.toLowerCase();
+
+        if (lower.includes("major flood")) return "MAJOR";
+        if (lower.includes("moderate flood")) return "MODERATE";
+        if (lower.includes("minor flood")) return "MINOR";
+        if (lower.includes("flood watch")) return "MINOR";
+        if (lower.includes("flood warning")) return "MINOR";
+
+        return "MINOR";
+      }
+
+      function formatSeverityLabel(severity) {
+        if (severity === "SAFE") return "No warning";
+        if (severity === "MINOR") return "Minor flood";
+        if (severity === "MODERATE") return "Moderate flood";
+        if (severity === "MAJOR") return "Major flood";
+        return "-";
+      }
+
+      function extractAreaName(title) {
+        const match = title.match(/for\s+(.+?)\.?$/i);
+
+        if (match && match[1]) {
+          return cleanText(match[1]);
+        }
+
+        return "Victoria";
+      }
+
+      function cleanText(text) {
+        return text.replace(/\s+/g, " ").trim();
+      }
+
+      async function loadFloodAlert() {
+        try {
+          const alert = await fetchFloodAlert();
+          updateGauge(alert);
+        } catch (error) {
+          console.error(error);
+
+          updateGauge({
+            status: "ERROR",
+            eventType: "Unable to load BOM warning",
+            severity: "Data unavailable",
+            certainty: "BOM RSS",
+            urgency: "Please try again later",
+            areaName: "Victoria",
+            expirationTime: "-"
+          });
+        }
+      }
+
+      function updateGauge(alert) {
+        const riskLabel = document.getElementById("riskLabel");
+        const gauge = document.getElementById("gauge");
+
+        let rating = 0;
+        let labelText = "Data Unavailable";
+
+        if (alert.status === "SAFE") {
+          rating = severityToRating.SAFE;
+          labelText = riskText.SAFE;
+          riskLabel.className =
+            "inline-block mt-2 px-3 py-1 rounded-full bg-green-100 text-green-800 font-semibold";
+        } else if (alert.status === "MINOR") {
+          rating = severityToRating.MINOR;
+          labelText = riskText.MINOR;
+          riskLabel.className =
+            "inline-block mt-2 px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold";
+        } else if (alert.status === "MODERATE") {
+          rating = severityToRating.MODERATE;
+          labelText = riskText.MODERATE;
+          riskLabel.className =
+            "inline-block mt-2 px-3 py-1 rounded-full bg-orange-100 text-orange-800 font-semibold";
+        } else if (alert.status === "MAJOR") {
+          rating = severityToRating.MAJOR;
+          labelText = riskText.MAJOR;
+          riskLabel.className =
+            "inline-block mt-2 px-3 py-1 rounded-full bg-red-100 text-red-800 font-semibold";
+        } else {
+          rating = 0;
+          labelText = "Data Unavailable";
+          riskLabel.className =
+            "inline-block mt-2 px-3 py-1 rounded-full bg-slate-200 text-slate-700 font-semibold";
+        }
+
+        gauge.style.setProperty("--rating", rating);
+
+        document.getElementById("eventType").textContent = alert.eventType || "-";
+        document.getElementById("severity").textContent = alert.severity || "-";
+        document.getElementById("certainty").textContent = alert.certainty || "-";
+        document.getElementById("urgency").textContent = alert.urgency || "-";
+        document.getElementById("areaName").textContent = alert.areaName || "-";
+        document.getElementById("expirationTime").textContent = alert.expirationTime || "-";
+        riskLabel.textContent = labelText;
+      }
+
+      function formatTime(timeString) {
+        if (!timeString || timeString === "-") return "-";
+
+        return new Date(timeString).toLocaleString("en-AU", {
+          dateStyle: "medium",
+          timeStyle: "short"
+        });
+      }
+
+      function mockFloodWarning() {
+        updateGauge({
+          status: "MAJOR",
+          eventType: "Major Flood Warning for Test Region",
+          severity: "Major flood",
+          certainty: "Test data",
+          urgency: "Check official BOM warning",
+          areaName: "Test Region",
+          expirationTime: new Date().toLocaleString("en-AU", {
+            dateStyle: "medium",
+            timeStyle: "short"
+          })
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("refreshGauge").addEventListener("click", loadFloodAlert);
+        document.getElementById("testFloodGauge").addEventListener("click", mockFloodWarning);
+        loadFloodAlert();
+      });
+    </script>
+  </section>
+
+
     <!-- Education Section -->
     <section id="education" class="py-16">
       <div class="container-custom">
