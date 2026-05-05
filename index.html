@@ -1,529 +1,783 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ENGR90051 Q2 - Prototype</title>
-    <link
-      rel="icon"
-      type="image/svg+xml"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>"
-    />
-  </head>
-  <body>
-    <!-- Loading Animation -->
-    <div id="loading-overlay" class="loading-overlay">
-      <div class="loading-container">
-        <video
-          id="loading-video"
-          class="loading-video"
-          muted
-          autoplay
-          loop
-          playsinline
-        >
-          <source src="./src/Flood.mp4" type="video/mp4" />
-          Your browser does not support video playback.
-        </video>
-        <div class="loading-text">Connecting...</div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ENGR90051 Q2 - Prototype</title>
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>" />
+</head>
+
+<body>
+  <!-- Loading Animation -->
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loading-container">
+      <video id="loading-video" class="loading-video" muted autoplay loop playsinline>
+        <source src="./src/Flood.mp4" type="video/mp4" />
+        Your browser does not support video playback.
+      </video>
+      <div class="loading-text">Connecting...</div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="container-custom">
+      <div class="flex justify-between items-center py-4">
+        <div class="text-2xl font-bold text-primary">ENGR90051</div>
+        <button class="nav-toggle hidden md:hidden text-2xl">☰</button>
+        <ul
+          class="nav-menu hidden md:flex gap-6 absolute md:relative left-0 top-full md:top-auto w-full md:w-auto bg-white md:bg-transparent md:flex-row flex-col p-4 md:p-0">
+          <li>
+            <a href="#home" class="hover:text-primary transition">Home</a>
+          </li>
+          <li>
+            <a href="#education" class="hover:text-primary transition">Education</a>
+          </li>
+          <li>
+            <a href="#quiz" class="hover:text-primary transition">Quiz</a>
+          </li>
+          <li>
+            <a href="#contact" class="hover:text-primary transition">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="home" class="bg-gradient-to-br from-blue-50 to-indigo-100 py-20">
+    <div class="container-custom">
+      <div class="text-center">
+        <h1 class="text-5xl md:text-6xl font-bold text-text-dark mb-4">
+          Welcome to the ENGR90051 Flood Preparedness Hub
+        </h1>
+        <p class="text-xl text-text-light mb-8 max-w-2xl mx-auto">
+          Learn how to understand flood risk, prepare effectively, and test
+          your knowledge with interactive scenarios.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="#contact"
+            class="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
+            Subscribe to get more information
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flood Risk Gauge section -->
+  <!-- Flood Risk Gauge section -->
+  <section id="dashboard" class="py-16 bg-gradient-to-br from-white to-slate-50">
+    <div class="container-custom max-w-3xl">
+      <h2 class="text-4xl font-bold text-center mb-8">Live Flood Risk Gauge</h2>
+
+      <div class="bg-white p-8 rounded-lg shadow-md mx-auto">
+        <div class="flood-gauge-card">
+
+<div class="graph-container mx-auto" id="gauge" style="--rating:0;">
+  <div class="half-donut">
+    <div class="slice"></div>
+    <div class="slice"></div>
+    <div class="slice"></div>
+    <div class="slice"></div>
+  </div>
+  <div class="marker"></div>
+</div>
+
+<div class="gauge-legend">
+  <div><span class="dot safe"></span>No Warning</div>
+  <div><span class="dot minor"></span>Minor</div>
+  <div><span class="dot moderate"></span>Moderate</div>
+  <div><span class="dot major"></span>Major</div>
+</div>
+
+          <div class="mt-4 text-base text-text-dark">
+            <p><strong>Event:</strong> <span id="eventType">Loading...</span></p>
+            <p><strong>Flood Level:</strong> <span id="severity">Loading...</span></p>
+            <p><strong>Source:</strong> <span id="certainty">Loading...</span></p>
+            <p><strong>Action:</strong> <span id="urgency">Loading...</span></p>
+            <p><strong>Area:</strong> <span id="areaName">Loading...</span></p>
+            <p><strong>Issued:</strong> <span id="expirationTime">Loading...</span></p>
+            <div class="inline-block mt-2 px-3 py-1 rounded-full bg-slate-200 text-slate-700 font-semibold"
+              id="riskLabel">
+              Loading...
+            </div>
+          </div>
+
+          <div class="btn-row mt-4">
+            <button id="refreshGauge" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-600">
+              Refresh Flood Risk
+            </button>
+
+            <button id="testFloodGauge" class="bg-slate-700 text-white px-4 py-2 rounded-lg hover:bg-slate-800">
+              Test Flood Warning
+            </button>
+          </div>
+
+        </div>
       </div>
     </div>
 
-    <!-- Navigation -->
-    <nav class="bg-white shadow-sm sticky top-0 z-50">
-      <div class="container-custom">
-        <div class="flex justify-between items-center py-4">
-          <div class="text-2xl font-bold text-primary">ENGR90051</div>
-          <button class="nav-toggle hidden md:hidden text-2xl">☰</button>
-          <ul
-            class="nav-menu hidden md:flex gap-6 absolute md:relative left-0 top-full md:top-auto w-full md:w-auto bg-white md:bg-transparent md:flex-row flex-col p-4 md:p-0"
-          >
-            <li>
-              <a href="#home" class="hover:text-primary transition">Home</a>
-            </li>
-            <li>
-              <a href="#education" class="hover:text-primary transition"
-                >Education</a
-              >
-            </li>
-            <li>
-              <a href="#quiz" class="hover:text-primary transition">Quiz</a>
-            </li>
-            <li>
-              <a href="#contact" class="hover:text-primary transition"
-                >Contact</a
-              >
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
+    <style>
+      .flood-gauge-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+      }
 
-    <!-- Hero Section -->
-    <section
-      id="home"
-      class="bg-gradient-to-br from-blue-50 to-indigo-100 py-20"
-    >
-      <div class="container-custom">
-        <div class="text-center">
-          <h1 class="text-5xl md:text-6xl font-bold text-text-dark mb-4">
-            Welcome to the ENGR90051 Flood Preparedness Hub
-          </h1>
-          <p class="text-xl text-text-light mb-8 max-w-2xl mx-auto">
-            Learn how to understand flood risk, prepare effectively, and test
-            your knowledge with interactive scenarios.
+      .graph-container {
+        --size: 18rem;
+        --stroke-size: calc(var(--size) / 5);
+        --rating: 0;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        box-sizing: border-box;
+      }
+
+      .half-donut {
+        width: var(--size);
+        height: calc(var(--size) / 2);
+        border-radius: var(--size) var(--size) 0 0;
+        position: relative;
+        overflow: hidden;
+        margin: 0 auto;
+      }
+
+      .slice {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        border-radius: var(--size) var(--size) 0 0;
+        border: var(--stroke-size) solid;
+        border-bottom: none;
+        transform-origin: 50% 100%;
+        box-sizing: border-box;
+      }
+
+
+
+
+      .slice:nth-child(1) {
+        border-color: #22c55e;
+        transform: rotate(0deg);
+      }
+
+      .slice:nth-child(2) {
+        border-color: #eab308;
+        transform: rotate(45deg);
+      }
+
+      .slice:nth-child(3) {
+        border-color: #f97316;
+        transform: rotate(90deg);
+      }
+
+      .slice:nth-child(4) {
+        border-color: #dc2626;
+        transform: rotate(135deg);
+      }
+
+      .gauge-legend {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.gauge-legend div {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.dot {
+  width: 0.8rem;
+  height: 0.8rem;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot.safe { background: #22c55e; }
+.dot.minor { background: #eab308; }
+.dot.moderate { background: #f97316; }
+.dot.major { background: #dc2626; }
+
+      .marker {
+        position: absolute;
+        z-index: 2;
+        left: 50%;
+        bottom: 0;
+
+        width: calc(var(--size) * 0.035);
+        height: calc(var(--size) * 0.40);
+
+        background: #2563eb;
+        border-radius: 999px;
+        box-shadow: 0 0.2rem 0.5rem #2563eb;
+
+        transform-origin: 50% 100%;
+        transform: translate(-50%, 0) rotate(calc(-90deg + (var(--rating) * 45deg) + 22.5deg));
+
+        transition: transform 0.45s ease;
+      }
+
+      .marker::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+
+        width: calc(var(--size) / 12);
+        height: calc(var(--size) / 12);
+
+        background: #2563eb;
+        border: calc(var(--size) / 40) solid whitesmoke;
+        border-radius: 50%;
+
+        transform: translate(-50%, 50%);
+      }
+
+      .mt-4.text-sm {
+        margin-top: 0.75rem;
+        text-align: left;
+        width: 100%;
+        max-width: 420px;
+        line-height: 1.7;
+      }
+
+      #riskLabel {
+        transition: all 0.3s ease;
+      }
+
+      .btn-row {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        width: 100%;
+      }
+
+      #refreshGauge,
+      #testFloodGauge {
+        transition: all 0.2s ease;
+      }
+
+      #refreshGauge:hover,
+      #testFloodGauge:hover {
+        transform: translateY(-1px);
+      }
+
+      @media (min-width: 768px) {
+        .graph-container {
+          --size: 22rem;
+        }
+      }
+    </style>
+
+    <script>
+      const BOM_VIC_WARNINGS_URL =
+        "https://corsproxy.io/?" + encodeURIComponent(
+          "https://reg.bom.gov.au/fwo/IDZ00066.warnings_land_vic.xml"
+        );
+
+      const severityToRating = {
+        SAFE: 0,
+        MINOR: 1,
+        MODERATE: 2,
+        MAJOR: 3
+      };
+
+      const riskText = {
+        SAFE: "No Active Flood Risk",
+        MINOR: "Minor Flood Warning",
+        MODERATE: "Moderate Flood Warning",
+        MAJOR: "Major Flood Warning"
+      };
+
+      async function fetchFloodAlert() {
+        const response = await fetch(BOM_VIC_WARNINGS_URL);
+
+        if (!response.ok) {
+          throw new Error(`BOM RSS error: ${response.status}`);
+        }
+
+        const xmlText = await response.text();
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(xmlText, "text/xml");
+
+        const items = [...xml.querySelectorAll("item")];
+
+        const activeFloodItem = items.find(item => {
+          const title = cleanText(item.querySelector("title")?.textContent || "");
+
+          return /flood/i.test(title) && !/cancellation/i.test(title);
+        });
+
+        if (!activeFloodItem) {
+          return {
+            status: "SAFE",
+            eventType: "No active flood warning",
+            severity: "No warning",
+            certainty: "BOM RSS",
+            urgency: "No action required",
+            areaName: "Melbourne",
+            expirationTime: "No active warning"
+          };
+        }
+
+        const title = cleanText(activeFloodItem.querySelector("title")?.textContent || "");
+        const pubDate = activeFloodItem.querySelector("pubDate")?.textContent || "";
+        const link = activeFloodItem.querySelector("link")?.textContent || "";
+
+        const severity = getFloodSeverity(title);
+
+        return {
+          status: severity,
+          eventType: title,
+          severity: formatSeverityLabel(severity),
+          certainty: "BOM RSS",
+          urgency: "Check official BOM warning",
+          areaName: extractAreaName(title),
+          expirationTime: formatTime(pubDate),
+          link
+        };
+      }
+
+      function getFloodSeverity(text) {
+        const lower = text.toLowerCase();
+
+        if (lower.includes("major flood")) return "MAJOR";
+        if (lower.includes("moderate flood")) return "MODERATE";
+        if (lower.includes("minor flood")) return "MINOR";
+        if (lower.includes("flood watch")) return "MINOR";
+        if (lower.includes("flood warning")) return "MINOR";
+
+        return "MINOR";
+      }
+
+      function formatSeverityLabel(severity) {
+        if (severity === "SAFE") return "No warning";
+        if (severity === "MINOR") return "Minor flood";
+        if (severity === "MODERATE") return "Moderate flood";
+        if (severity === "MAJOR") return "Major flood";
+        return "-";
+      }
+
+      function extractAreaName(title) {
+        const match = title.match(/for\s+(.+?)\.?$/i);
+
+        if (match && match[1]) {
+          return cleanText(match[1]);
+        }
+
+        return "Victoria";
+      }
+
+      function cleanText(text) {
+        return text.replace(/\s+/g, " ").trim();
+      }
+
+      async function loadFloodAlert() {
+        try {
+          const alert = await fetchFloodAlert();
+          updateGauge(alert);
+        } catch (error) {
+          console.error(error);
+
+          updateGauge({
+            status: "ERROR",
+            eventType: "Unable to load BOM warning",
+            severity: "Data unavailable",
+            certainty: "BOM RSS",
+            urgency: "Please try again later",
+            areaName: "Victoria",
+            expirationTime: "-"
+          });
+        }
+      }
+
+      function updateGauge(alert) {
+        const riskLabel = document.getElementById("riskLabel");
+        const gauge = document.getElementById("gauge");
+
+        let rating = 0;
+        let labelText = "Data Unavailable";
+
+        if (alert.status === "SAFE") {
+          rating = severityToRating.SAFE;
+          labelText = riskText.SAFE;
+          riskLabel.className =
+            "inline-block mt-2 px-3 py-1 rounded-full bg-green-100 text-green-800 font-semibold";
+        } else if (alert.status === "MINOR") {
+          rating = severityToRating.MINOR;
+          labelText = riskText.MINOR;
+          riskLabel.className =
+            "inline-block mt-2 px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold";
+        } else if (alert.status === "MODERATE") {
+          rating = severityToRating.MODERATE;
+          labelText = riskText.MODERATE;
+          riskLabel.className =
+            "inline-block mt-2 px-3 py-1 rounded-full bg-orange-100 text-orange-800 font-semibold";
+        } else if (alert.status === "MAJOR") {
+          rating = severityToRating.MAJOR;
+          labelText = riskText.MAJOR;
+          riskLabel.className =
+            "inline-block mt-2 px-3 py-1 rounded-full bg-red-100 text-red-800 font-semibold";
+        } else {
+          rating = 0;
+          labelText = "Data Unavailable";
+          riskLabel.className =
+            "inline-block mt-2 px-3 py-1 rounded-full bg-slate-200 text-slate-700 font-semibold";
+        }
+
+        gauge.style.setProperty("--rating", rating);
+
+        document.getElementById("eventType").textContent = alert.eventType || "-";
+        document.getElementById("severity").textContent = alert.severity || "-";
+        document.getElementById("certainty").textContent = alert.certainty || "-";
+        document.getElementById("urgency").textContent = alert.urgency || "-";
+        document.getElementById("areaName").textContent = alert.areaName || "-";
+        document.getElementById("expirationTime").textContent = alert.expirationTime || "-";
+        riskLabel.textContent = labelText;
+      }
+
+      function formatTime(timeString) {
+        if (!timeString || timeString === "-") return "-";
+
+        return new Date(timeString).toLocaleString("en-AU", {
+          dateStyle: "medium",
+          timeStyle: "short"
+        });
+      }
+
+      function mockFloodWarning() {
+        updateGauge({
+          status: "MAJOR",
+          eventType: "Major Flood Warning for Test Region",
+          severity: "Major flood",
+          certainty: "Test data",
+          urgency: "Check official BOM warning",
+          areaName: "Test Region",
+          expirationTime: new Date().toLocaleString("en-AU", {
+            dateStyle: "medium",
+            timeStyle: "short"
+          })
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("refreshGauge").addEventListener("click", loadFloodAlert);
+        document.getElementById("testFloodGauge").addEventListener("click", mockFloodWarning);
+        loadFloodAlert();
+      });
+    </script>
+  </section>
+
+  <!-- Education Section -->
+  <section id="education" class="py-16">
+    <div class="container-custom">
+      <h2 class="text-4xl font-bold text-center mb-8">Education Courses</h2>
+      <p class="text-center text-text-light mb-12 max-w-3xl mx-auto">
+        Short, practical lessons with subtitles and AI-generated summaries so
+        everyone can learn how to understand flood risks and prepare with
+        confidence.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition">
+          <div class="text-4xl mb-4">🌊</div>
+          <h3 class="text-xl font-semibold mb-3">Flood Basics</h3>
+          <p class="text-text-light mb-4">
+            Learn what causes floods, where they happen, and how to recognize
+            early warning signs.
           </p>
-          <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="#contact"
-              class="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-600 transition"
-            >
-              Subscribe to get more information
-            </a>
+          <div class="video-wrapper mb-4 overflow-hidden rounded-lg relative">
+            <img src="https://images.unsplash.com/photo-1505483531331-15a9a1d24f59?auto=format&fit=crop&w=1200&q=80"
+              alt="Flood basics preview" class="w-full aspect-video object-cover" />
+            <div class="absolute inset-0 flex items-center justify-center bg-slate-900/25">
+              <span
+                class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-2xl font-bold text-primary">
+                ▶
+              </span>
+            </div>
+          </div>
+          <a href="https://www.youtube.com/watch?v=9hQZCiZ21fk" target="_blank" rel="noreferrer"
+            class="w-full inline-flex justify-center bg-primary text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition">
+            Open on YouTube
+          </a>
+          <div class="mt-4 rounded-lg bg-slate-50 border border-slate-200 p-4 text-sm text-slate-700">
+            <p class="font-semibold mb-2">Captions & AI Summary</p>
+            <p>
+              Example YouTube video with automatic captions and subtitles
+              support.
+            </p>
+          </div>
+        </div>
+        <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition">
+          <div class="text-4xl mb-4">🧯</div>
+          <h3 class="text-xl font-semibold mb-3">Preparation Steps</h3>
+          <p class="text-text-light mb-4">
+            Prepare your home, emergency kit, and evacuation plan to stay safe
+            during flood season.
+          </p>
+          <div class="video-wrapper mb-4 overflow-hidden rounded-lg relative">
+            <img src="https://images.unsplash.com/photo-1556742400-b5ab5a04f7ab?auto=format&fit=crop&w=1200&q=80"
+              alt="Preparation steps preview" class="w-full aspect-video object-cover" />
+            <div class="absolute inset-0 flex items-center justify-center bg-slate-900/25">
+              <span
+                class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-2xl font-bold text-primary">
+                ▶
+              </span>
+            </div>
+          </div>
+          <a href="https://www.youtube.com/watch?v=ZnwbFcngk6s" target="_blank" rel="noreferrer"
+            class="w-full inline-flex justify-center bg-primary text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition">
+            Open on YouTube
+          </a>
+          <div class="mt-4 rounded-lg bg-slate-50 border border-slate-200 p-4 text-sm text-slate-700">
+            <p class="font-semibold mb-2">Captions & AI Summary</p>
+            <p>
+              Example YouTube video with automatic captions and subtitles
+              support.
+            </p>
+          </div>
+        </div>
+        <div class="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition">
+          <div class="text-4xl mb-4">🧠</div>
+          <h3 class="text-xl font-semibold mb-3">Mindset & Response</h3>
+          <p class="text-text-light mb-4">
+            Build a positive mindset and learn how to respond calmly and
+            effectively during emergencies.
+          </p>
+          <div class="video-wrapper mb-4 overflow-hidden rounded-lg relative">
+            <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80"
+              alt="Mindset and response preview" class="w-full aspect-video object-cover" />
+            <div class="absolute inset-0 flex items-center justify-center bg-slate-900/25">
+              <span
+                class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-2xl font-bold text-primary">
+                ▶
+              </span>
+            </div>
+          </div>
+          <a href="https://www.youtube.com/watch?v=cCZWkMXJwQE" target="_blank" rel="noreferrer"
+            class="w-full inline-flex justify-center bg-primary text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition">
+            Open on YouTube
+          </a>
+          <div class="mt-4 rounded-lg bg-slate-50 border border-slate-200 p-4 text-sm text-slate-700">
+            <p class="font-semibold mb-2">Captions & AI Summary</p>
+            <p>
+              Example YouTube video with automatic captions and subtitles
+              support.
+            </p>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Education Section -->
-    <section id="education" class="py-16">
-      <div class="container-custom">
-        <h2 class="text-4xl font-bold text-center mb-8">Education Courses</h2>
-        <p class="text-center text-text-light mb-12 max-w-3xl mx-auto">
-          Short, practical lessons with subtitles and AI-generated summaries so
-          everyone can learn how to understand flood risks and prepare with
-          confidence.
-        </p>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div
-            class="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition"
-          >
-            <div class="text-4xl mb-4">🌊</div>
-            <h3 class="text-xl font-semibold mb-3">Flood Basics</h3>
-            <p class="text-text-light mb-4">
-              Learn what causes floods, where they happen, and how to recognize
-              early warning signs.
-            </p>
-            <div class="video-wrapper mb-4 overflow-hidden rounded-lg relative">
-              <img
-                src="https://images.unsplash.com/photo-1505483531331-15a9a1d24f59?auto=format&fit=crop&w=1200&q=80"
-                alt="Flood basics preview"
-                class="w-full aspect-video object-cover"
-              />
-              <div
-                class="absolute inset-0 flex items-center justify-center bg-slate-900/25"
-              >
-                <span
-                  class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-2xl font-bold text-primary"
-                >
-                  ▶
-                </span>
+  <!-- Quiz Section -->
+  <section id="quiz" class="py-16 bg-gray-50">
+    <div class="container-custom max-w-4xl">
+      <h2 class="text-4xl font-bold text-center mb-8">Quiz & Engagement</h2>
+      <p class="text-center text-text-light mb-10 max-w-3xl mx-auto">
+        Test your understanding of the lessons and complete the quiz to check
+        your preparedness level.
+      </p>
+      <div class="bg-white p-8 rounded-lg shadow-md">
+        <div class="quiz-flip-grid">
+          <div class="flip-card" id="card-1">
+            <div class="flip-card-inner">
+              <div class="flip-card-front p-6">
+                <div>
+                  <div class="text-4xl mb-4">1</div>
+                  <p class="text-xl font-semibold mb-4">
+                    What is the first step when a flood warning is issued?
+                  </p>
+                  <div class="space-y-3 text-text-light">
+                    <label class="block"><input type="radio" name="q1" value="a" class="mr-2" />Continue normal
+                      activities</label>
+                    <label class="block"><input type="radio" name="q1" value="b" class="mr-2" />Move to higher ground
+                      immediately</label>
+                    <label class="block"><input type="radio" name="q1" value="c" class="mr-2" />Ignore the
+                      warning</label>
+                  </div>
+                </div>
+                <button type="button" data-card="card-1" data-input="q1"
+                  class="quiz-flip-btn mt-6 w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
+                  Check Answer
+                </button>
               </div>
-            </div>
-            <a
-              href="https://www.youtube.com/watch?v=9hQZCiZ21fk"
-              target="_blank"
-              rel="noreferrer"
-              class="w-full inline-flex justify-center bg-primary text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition"
-            >
-              Open on YouTube
-            </a>
-            <div
-              class="mt-4 rounded-lg bg-slate-50 border border-slate-200 p-4 text-sm text-slate-700"
-            >
-              <p class="font-semibold mb-2">Captions & AI Summary</p>
-              <p>
-                Example YouTube video with automatic captions and subtitles
-                support.
-              </p>
+              <div class="flip-card-back p-6">
+                <div class="text-center">
+                  <div class="check-mark-container mb-4">
+                    <div class="check-mark">
+                      <svg class="w-16 h-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                  </div>
+                  <p class="text-xl font-semibold mb-3 text-green-600">
+                    Correct!
+                  </p>
+                  <p class="quiz-back-feedback text-text-dark">
+                    During a flood warning, moving quickly to higher ground
+                    keeps you safe and gives rescue teams room to work.
+                  </p>
+                </div>
+                <button type="button" data-card="card-1"
+                  class="quiz-flip-btn mt-6 w-full bg-white text-primary border border-primary py-3 rounded-lg font-semibold hover:bg-slate-50 transition">
+                  Back to Question
+                </button>
+              </div>
             </div>
           </div>
-          <div
-            class="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition"
-          >
-            <div class="text-4xl mb-4">🧯</div>
-            <h3 class="text-xl font-semibold mb-3">Preparation Steps</h3>
-            <p class="text-text-light mb-4">
-              Prepare your home, emergency kit, and evacuation plan to stay safe
-              during flood season.
-            </p>
-            <div class="video-wrapper mb-4 overflow-hidden rounded-lg relative">
-              <img
-                src="https://images.unsplash.com/photo-1556742400-b5ab5a04f7ab?auto=format&fit=crop&w=1200&q=80"
-                alt="Preparation steps preview"
-                class="w-full aspect-video object-cover"
-              />
-              <div
-                class="absolute inset-0 flex items-center justify-center bg-slate-900/25"
-              >
-                <span
-                  class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-2xl font-bold text-primary"
-                >
-                  ▶
-                </span>
+
+          <div class="flip-card" id="card-2">
+            <div class="flip-card-inner">
+              <div class="flip-card-front p-6">
+                <div>
+                  <div class="text-4xl mb-4">2</div>
+                  <p class="text-xl font-semibold mb-4">
+                    Which item should be included in a flood emergency kit?
+                  </p>
+                  <div class="space-y-3 text-text-light">
+                    <label class="block"><input type="radio" name="q2" value="a" class="mr-2" />Bottled water and first
+                      aid supplies</label>
+                    <label class="block"><input type="radio" name="q2" value="b" class="mr-2" />Only a phone
+                      charger</label>
+                    <label class="block"><input type="radio" name="q2" value="c" class="mr-2" />No preparation
+                      needed</label>
+                  </div>
+                </div>
+                <button type="button" data-card="card-2" data-input="q2"
+                  class="quiz-flip-btn mt-6 w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
+                  Check Answer
+                </button>
               </div>
-            </div>
-            <a
-              href="https://www.youtube.com/watch?v=ZnwbFcngk6s"
-              target="_blank"
-              rel="noreferrer"
-              class="w-full inline-flex justify-center bg-primary text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition"
-            >
-              Open on YouTube
-            </a>
-            <div
-              class="mt-4 rounded-lg bg-slate-50 border border-slate-200 p-4 text-sm text-slate-700"
-            >
-              <p class="font-semibold mb-2">Captions & AI Summary</p>
-              <p>
-                Example YouTube video with automatic captions and subtitles
-                support.
-              </p>
+              <div class="flip-card-back p-6">
+                <div class="text-center">
+                  <div class="check-mark-container mb-4">
+                    <div class="check-mark">
+                      <svg class="w-16 h-16 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                    </div>
+                  </div>
+                  <p class="text-xl font-semibold mb-3 text-green-600">
+                    Correct!
+                  </p>
+                  <p class="quiz-back-feedback text-text-dark">
+                    A good flood emergency kit should include clean water,
+                    first aid, and basic supplies so you can stay safe if help
+                    is delayed.
+                  </p>
+                </div>
+                <button type="button" data-card="card-2"
+                  class="quiz-flip-btn mt-6 w-full bg-white text-primary border border-primary py-3 rounded-lg font-semibold hover:bg-slate-50 transition">
+                  Back to Question
+                </button>
+              </div>
             </div>
           </div>
-          <div
-            class="bg-white p-8 rounded-lg shadow-md hover:shadow-lg transition"
-          >
-            <div class="text-4xl mb-4">🧠</div>
-            <h3 class="text-xl font-semibold mb-3">Mindset & Response</h3>
-            <p class="text-text-light mb-4">
-              Build a positive mindset and learn how to respond calmly and
-              effectively during emergencies.
-            </p>
-            <div class="video-wrapper mb-4 overflow-hidden rounded-lg relative">
-              <img
-                src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80"
-                alt="Mindset and response preview"
-                class="w-full aspect-video object-cover"
-              />
-              <div
-                class="absolute inset-0 flex items-center justify-center bg-slate-900/25"
-              >
-                <span
-                  class="inline-flex h-16 w-16 items-center justify-center rounded-full bg-white/90 text-2xl font-bold text-primary"
-                >
-                  ▶
-                </span>
+
+          <div class="flip-card" id="card-3">
+            <div class="flip-card-inner">
+              <div class="flip-card-front p-6">
+                <div>
+                  <div class="text-4xl mb-4">3</div>
+                  <p class="text-xl font-semibold mb-4">
+                    What is the best attitude during flood preparation?
+                  </p>
+                  <div class="space-y-3 text-text-light">
+                    <label class="block"><input type="radio" name="q3" value="a" class="mr-2" />Stay calm and act
+                      proactively</label>
+                    <label class="block"><input type="radio" name="q3" value="b" class="mr-2" />Panic
+                      immediately</label>
+                    <label class="block"><input type="radio" name="q3" value="c" class="mr-2" />Wait until the last
+                      minute</label>
+                  </div>
+                </div>
+                <button type="button" data-card="card-3" data-input="q3"
+                  class="quiz-flip-btn mt-6 w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
+                  Check Answer
+                </button>
               </div>
-            </div>
-            <a
-              href="https://www.youtube.com/watch?v=cCZWkMXJwQE"
-              target="_blank"
-              rel="noreferrer"
-              class="w-full inline-flex justify-center bg-primary text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition"
-            >
-              Open on YouTube
-            </a>
-            <div
-              class="mt-4 rounded-lg bg-slate-50 border border-slate-200 p-4 text-sm text-slate-700"
-            >
-              <p class="font-semibold mb-2">Captions & AI Summary</p>
-              <p>
-                Example YouTube video with automatic captions and subtitles
-                support.
-              </p>
+              <div class="flip-card-back p-6">
+                <div>
+                  <p class="text-xl font-semibold mb-3">Answer</p>
+                  <p class="quiz-back-correct text-primary text-lg font-semibold mb-2">
+                    Correct: Stay calm and act proactively
+                  </p>
+                  <p class="quiz-back-feedback text-text-dark">
+                    A calm, prepared mindset helps you make safer choices and
+                    avoid mistakes when flood threats are near.
+                  </p>
+                </div>
+                <button type="button" data-card="card-3"
+                  class="quiz-flip-btn mt-6 w-full bg-white text-primary border border-primary py-3 rounded-lg font-semibold hover:bg-slate-50 transition">
+                  Back to Question
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-
-    <!-- Quiz Section -->
-    <section id="quiz" class="py-16 bg-gray-50">
-      <div class="container-custom max-w-4xl">
-        <h2 class="text-4xl font-bold text-center mb-8">Quiz & Engagement</h2>
-        <p class="text-center text-text-light mb-10 max-w-3xl mx-auto">
-          Test your understanding of the lessons and complete the quiz to check
-          your preparedness level.
-        </p>
-        <div class="bg-white p-8 rounded-lg shadow-md">
-          <div class="quiz-flip-grid">
-            <div class="flip-card" id="card-1">
-              <div class="flip-card-inner">
-                <div class="flip-card-front p-6">
-                  <div>
-                    <div class="text-4xl mb-4">1</div>
-                    <p class="text-xl font-semibold mb-4">
-                      What is the first step when a flood warning is issued?
-                    </p>
-                    <div class="space-y-3 text-text-light">
-                      <label class="block"
-                        ><input
-                          type="radio"
-                          name="q1"
-                          value="a"
-                          class="mr-2"
-                        />Continue normal activities</label
-                      >
-                      <label class="block"
-                        ><input
-                          type="radio"
-                          name="q1"
-                          value="b"
-                          class="mr-2"
-                        />Move to higher ground immediately</label
-                      >
-                      <label class="block"
-                        ><input
-                          type="radio"
-                          name="q1"
-                          value="c"
-                          class="mr-2"
-                        />Ignore the warning</label
-                      >
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    data-card="card-1"
-                    data-input="q1"
-                    class="quiz-flip-btn mt-6 w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition"
-                  >
-                    Check Answer
-                  </button>
-                </div>
-                <div class="flip-card-back p-6">
-                  <div class="text-center">
-                    <div class="check-mark-container mb-4">
-                      <div class="check-mark">
-                        <svg
-                          class="w-16 h-16 text-green-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M5 13l4 4L19 7"
-                          ></path>
-                        </svg>
-                      </div>
-                    </div>
-                    <p class="text-xl font-semibold mb-3 text-green-600">
-                      Correct!
-                    </p>
-                    <p class="quiz-back-feedback text-text-dark">
-                      During a flood warning, moving quickly to higher ground
-                      keeps you safe and gives rescue teams room to work.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    data-card="card-1"
-                    class="quiz-flip-btn mt-6 w-full bg-white text-primary border border-primary py-3 rounded-lg font-semibold hover:bg-slate-50 transition"
-                  >
-                    Back to Question
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div class="flip-card" id="card-2">
-              <div class="flip-card-inner">
-                <div class="flip-card-front p-6">
-                  <div>
-                    <div class="text-4xl mb-4">2</div>
-                    <p class="text-xl font-semibold mb-4">
-                      Which item should be included in a flood emergency kit?
-                    </p>
-                    <div class="space-y-3 text-text-light">
-                      <label class="block"
-                        ><input
-                          type="radio"
-                          name="q2"
-                          value="a"
-                          class="mr-2"
-                        />Bottled water and first aid supplies</label
-                      >
-                      <label class="block"
-                        ><input
-                          type="radio"
-                          name="q2"
-                          value="b"
-                          class="mr-2"
-                        />Only a phone charger</label
-                      >
-                      <label class="block"
-                        ><input
-                          type="radio"
-                          name="q2"
-                          value="c"
-                          class="mr-2"
-                        />No preparation needed</label
-                      >
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    data-card="card-2"
-                    data-input="q2"
-                    class="quiz-flip-btn mt-6 w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition"
-                  >
-                    Check Answer
-                  </button>
-                </div>
-                <div class="flip-card-back p-6">
-                  <div class="text-center">
-                    <div class="check-mark-container mb-4">
-                      <div class="check-mark">
-                        <svg
-                          class="w-16 h-16 text-green-500"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M5 13l4 4L19 7"
-                          ></path>
-                        </svg>
-                      </div>
-                    </div>
-                    <p class="text-xl font-semibold mb-3 text-green-600">
-                      Correct!
-                    </p>
-                    <p class="quiz-back-feedback text-text-dark">
-                      A good flood emergency kit should include clean water,
-                      first aid, and basic supplies so you can stay safe if help
-                      is delayed.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    data-card="card-2"
-                    class="quiz-flip-btn mt-6 w-full bg-white text-primary border border-primary py-3 rounded-lg font-semibold hover:bg-slate-50 transition"
-                  >
-                    Back to Question
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div class="flip-card" id="card-3">
-              <div class="flip-card-inner">
-                <div class="flip-card-front p-6">
-                  <div>
-                    <div class="text-4xl mb-4">3</div>
-                    <p class="text-xl font-semibold mb-4">
-                      What is the best attitude during flood preparation?
-                    </p>
-                    <div class="space-y-3 text-text-light">
-                      <label class="block"
-                        ><input
-                          type="radio"
-                          name="q3"
-                          value="a"
-                          class="mr-2"
-                        />Stay calm and act proactively</label
-                      >
-                      <label class="block"
-                        ><input
-                          type="radio"
-                          name="q3"
-                          value="b"
-                          class="mr-2"
-                        />Panic immediately</label
-                      >
-                      <label class="block"
-                        ><input
-                          type="radio"
-                          name="q3"
-                          value="c"
-                          class="mr-2"
-                        />Wait until the last minute</label
-                      >
-                    </div>
-                  </div>
-                  <button
-                    type="button"
-                    data-card="card-3"
-                    data-input="q3"
-                    class="quiz-flip-btn mt-6 w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition"
-                  >
-                    Check Answer
-                  </button>
-                </div>
-                <div class="flip-card-back p-6">
-                  <div>
-                    <p class="text-xl font-semibold mb-3">Answer</p>
-                    <p
-                      class="quiz-back-correct text-primary text-lg font-semibold mb-2"
-                    >
-                      Correct: Stay calm and act proactively
-                    </p>
-                    <p class="quiz-back-feedback text-text-dark">
-                      A calm, prepared mindset helps you make safer choices and
-                      avoid mistakes when flood threats are near.
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    data-card="card-3"
-                    class="quiz-flip-btn mt-6 w-full bg-white text-primary border border-primary py-3 rounded-lg font-semibold hover:bg-slate-50 transition"
-                  >
-                    Back to Question
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="mt-8 text-center">
-            <button
-              id="quiz-reset"
-              type="button"
-              class="inline-flex items-center justify-center bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition"
-            >
-              Reset Cards
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Subscription Section -->
-    <section id="contact" class="py-16">
-      <div class="container-custom max-w-2xl">
-        <h2 class="text-4xl font-bold text-center mb-8">
-          Subscribe for Alerts
-        </h2>
-        <p class="text-center text-text-light mb-10 max-w-3xl mx-auto">
-          Enter your email to receive real-time notifications when flood
-          conditions are approaching severe levels. We will only contact you in
-          urgent flood situations and will not disturb you otherwise.
-        </p>
-        <form class="bg-white p-8 rounded-lg shadow-md">
-          <div class="mb-6">
-            <label class="block text-sm font-semibold mb-2">Email</label>
-            <input
-              type="email"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              placeholder="Enter your email address"
-            />
-          </div>
-          <button
-            type="submit"
-            class="w-full bg-primary text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition"
-          >
-            Subscribe Now
+        <div class="mt-8 text-center">
+          <button id="quiz-reset" type="button"
+            class="inline-flex items-center justify-center bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
+            Reset Cards
           </button>
-        </form>
+        </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <!-- Footer -->
-    <footer class="bg-text-dark text-white py-8 mt-16">
-      <div class="container-custom text-center">
-        <p class="text-text-light">
-          © 2026 ENGR90051 Project. All rights reserved.
-        </p>
-        <p class="text-sm text-gray-500 mt-2">Built with Vite + Tailwind CSS</p>
-      </div>
-    </footer>
+  <!-- Subscription Section -->
+  <section id="contact" class="py-16">
+    <div class="container-custom max-w-2xl">
+      <h2 class="text-4xl font-bold text-center mb-8">
+        Subscribe for Alerts
+      </h2>
+      <p class="text-center text-text-light mb-10 max-w-3xl mx-auto">
+        Enter your email to receive real-time notifications when flood
+        conditions are approaching severe levels. We will only contact you in
+        urgent flood situations and will not disturb you otherwise.
+      </p>
+      <form class="bg-white p-8 rounded-lg shadow-md">
+        <div class="mb-6">
+          <label class="block text-sm font-semibold mb-2">Email</label>
+          <input type="email"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+            placeholder="Enter your email address" />
+        </div>
+        <button type="submit"
+          class="w-full bg-primary text-white py-2 rounded-lg font-semibold hover:bg-blue-600 transition">
+          Subscribe Now
+        </button>
+      </form>
+    </div>
+  </section>
 
-    <script type="module" src="./src/main.js"></script>
-  </body>
+  <!-- Footer -->
+  <footer class="bg-text-dark text-white py-8 mt-16">
+    <div class="container-custom text-center">
+      <p class="text-text-light">
+        © 2026 ENGR90051 Project. All rights reserved.
+      </p>
+      <p class="text-sm text-gray-500 mt-2">Built with Vite + Tailwind CSS</p>
+    </div>
+  </footer>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+
 </html>
