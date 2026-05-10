@@ -1,8 +1,41 @@
 import './main.css'
 
+// Function to fetch sensor data from backend
+async function fetchSensorData() {
+  try {
+    const response = await fetch('/api/sensor-data');
+    const data = await response.json();
+    updateSensorDisplay(data);
+  } catch (error) {
+    console.error('Error fetching sensor data:', error);
+  }
+}
+
+// Function to update sensor display on page
+function updateSensorDisplay(data) {
+  const waterLevelEl = document.getElementById('waterLevel');
+  const temperatureEl = document.getElementById('temperature');
+  const rainfallEl = document.getElementById('rainfall');
+  const alertEl = document.getElementById('alert');
+
+  if (waterLevelEl) waterLevelEl.textContent = `${data.waterLevel.toFixed(2)} cm`;
+  if (temperatureEl) temperatureEl.textContent = `${data.temperature.toFixed(2)} °C`;
+  if (rainfallEl) rainfallEl.textContent = `${data.rainfall.toFixed(2)} mm`;
+  if (alertEl) {
+    alertEl.textContent = data.alert;
+    alertEl.className = data.alert === 'Flood Alert' ? 'text-red-500 font-bold' : 'text-green-500';
+  }
+}
+
 // App initialization
 document.addEventListener('DOMContentLoaded', () => {
   console.log('APP initialized')
+  
+  // Fetch initial sensor data
+  fetchSensorData();
+  
+  // Update sensor data every 30 seconds
+  setInterval(fetchSensorData, 30000);
   
   // Navigation menu toggle
   const navToggle = document.querySelector('.nav-toggle')
