@@ -94,9 +94,8 @@
       <div class="bg-white p-8 rounded-lg shadow-md mx-auto">
         <div class="flood-gauge-card">
 
-          <div class="graph-container mx-auto" id="gauge" style="--rating:0;">
+          <div class="graph-container mx-auto" id="gauge" style="--gauge-angle:-90deg;">
             <div class="half-donut">
-              <div class="slice"></div>
               <div class="slice"></div>
               <div class="slice"></div>
               <div class="slice"></div>
@@ -105,7 +104,6 @@
           </div>
 
           <div class="gauge-legend">
-            <div><span class="dot safe"></span>No Warning</div>
             <div><span class="dot minor"></span>Minor</div>
             <div><span class="dot moderate"></span>Moderate</div>
             <div><span class="dot major"></span>Major</div>
@@ -150,7 +148,7 @@
       .graph-container {
         --size: 18rem;
         --stroke-size: calc(var(--size) / 5);
-        --rating: 0;
+        --gauge-angle: -90deg;
         position: relative;
         display: flex;
         align-items: center;
@@ -183,23 +181,18 @@
 
 
       .slice:nth-child(1) {
-        border-color: #22c55e;
+        border-color: #eab308;
         transform: rotate(0deg);
       }
 
       .slice:nth-child(2) {
-        border-color: #eab308;
-        transform: rotate(45deg);
+        border-color: #f97316;
+        transform: rotate(60deg);
       }
 
       .slice:nth-child(3) {
-        border-color: #f97316;
-        transform: rotate(90deg);
-      }
-
-      .slice:nth-child(4) {
         border-color: #dc2626;
-        transform: rotate(135deg);
+        transform: rotate(120deg);
       }
 
       .gauge-legend {
@@ -224,10 +217,6 @@
         height: 0.8rem;
         border-radius: 50%;
         display: inline-block;
-      }
-
-      .dot.safe {
-        background: #22c55e;
       }
 
       .dot.minor {
@@ -256,7 +245,7 @@
         box-shadow: 0 0.2rem 0.5rem #2563eb;
 
         transform-origin: 50% 100%;
-        transform: translate(-50%, 0) rotate(calc(-90deg + (var(--rating) * 45deg) + 22.5deg));
+        transform: translate(-50%, 0) rotate(var(--gauge-angle, -90deg));
 
         transition: transform 0.45s ease;
       }
@@ -320,11 +309,11 @@
           "https://reg.bom.gov.au/fwo/IDZ00066.warnings_land_vic.xml"
         );
 
-      const severityToRating = {
-        SAFE: 0,
-        MINOR: 1,
-        MODERATE: 2,
-        MAJOR: 3
+      const severityToAngle = {
+        SAFE: "-90deg",
+        MINOR: "-60deg",
+        MODERATE: "0deg",
+        MAJOR: "60deg"
       };
 
       const riskText = {
@@ -440,37 +429,37 @@
         const riskLabel = document.getElementById("riskLabel");
         const gauge = document.getElementById("gauge");
 
-        let rating = 0;
+        let gaugeAngle = "0deg";
         let labelText = "Data Unavailable";
 
         if (alert.status === "SAFE") {
-          rating = severityToRating.SAFE;
+          gaugeAngle = severityToAngle.SAFE;
           labelText = riskText.SAFE;
           riskLabel.className =
-            "inline-block mt-2 px-3 py-1 rounded-full bg-green-100 text-green-800 font-semibold";
+            "inline-block mt-2 px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-semibold";
         } else if (alert.status === "MINOR") {
-          rating = severityToRating.MINOR;
+          gaugeAngle = severityToAngle.MINOR;
           labelText = riskText.MINOR;
           riskLabel.className =
             "inline-block mt-2 px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 font-semibold";
         } else if (alert.status === "MODERATE") {
-          rating = severityToRating.MODERATE;
+          gaugeAngle = severityToAngle.MODERATE;
           labelText = riskText.MODERATE;
           riskLabel.className =
             "inline-block mt-2 px-3 py-1 rounded-full bg-orange-100 text-orange-800 font-semibold";
         } else if (alert.status === "MAJOR") {
-          rating = severityToRating.MAJOR;
+          gaugeAngle = severityToAngle.MAJOR;
           labelText = riskText.MAJOR;
           riskLabel.className =
             "inline-block mt-2 px-3 py-1 rounded-full bg-red-100 text-red-800 font-semibold";
         } else {
-          rating = 0;
+          gaugeAngle = "0deg";
           labelText = "Data Unavailable";
           riskLabel.className =
             "inline-block mt-2 px-3 py-1 rounded-full bg-slate-200 text-slate-700 font-semibold";
         }
 
-        gauge.style.setProperty("--rating", rating);
+        gauge.style.setProperty("--gauge-angle", gaugeAngle);
 
         document.getElementById("eventType").textContent = alert.eventType || "-";
         document.getElementById("severity").textContent = alert.severity || "-";
