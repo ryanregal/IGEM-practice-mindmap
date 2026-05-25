@@ -100,8 +100,8 @@ async function fetchBOMData() {
 // Perform initial fetch
 fetchBOMData();
 
-// Update every 10 seconds (10000 ms) to match frontend polling interval
-setInterval(fetchBOMData, 10000);
+// Update every 3 seconds (3000 ms) to match frontend polling interval
+setInterval(fetchBOMData, 3000);
 
 /**
  * Main sensor data endpoint - for both frontend and Arduino

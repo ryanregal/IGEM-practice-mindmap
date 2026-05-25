@@ -38,8 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Fetch initial sensor data
     fetchSensorData();
 
-    // Update sensor data every 10 seconds
-    setInterval(fetchSensorData, 10000);
+    // Update sensor data every 3 seconds
+    setInterval(fetchSensorData, 3000);
   }
   
   // Navigation menu toggle
