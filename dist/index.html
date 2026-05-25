@@ -112,15 +112,15 @@
           </div>
 
           <div class="mt-4 text-base text-text-dark">
-            <p><strong>Event:</strong> <span id="eventType">Loading...</span></p>
-            <p><strong>Flood Level:</strong> <span id="severity">Loading...</span></p>
-            <p><strong>Source:</strong> <span id="certainty">Loading...</span></p>
-            <p><strong>Action:</strong> <span id="urgency">Loading...</span></p>
-            <p><strong>Area:</strong> <span id="areaName">Loading...</span></p>
-            <p><strong>Issued:</strong> <span id="expirationTime">Loading...</span></p>
-            <div class="inline-block mt-2 px-3 py-1 rounded-full bg-slate-200 text-slate-700 font-semibold"
+            <p><strong>Event:</strong> <span id="eventType">No active flood warning</span></p>
+            <p><strong>Flood Level:</strong> <span id="severity">No warning</span></p>
+            <p><strong>Source:</strong> <span id="certainty">Backend sensor data</span></p>
+            <p><strong>Action:</strong> <span id="urgency">No action required</span></p>
+            <p><strong>Area:</strong> <span id="areaName">Melbourne</span></p>
+            <p><strong>Issued:</strong> <span id="expirationTime">-</span></p>
+            <div class="inline-block mt-2 px-3 py-1 rounded-full bg-slate-100 text-slate-700 font-semibold"
               id="riskLabel">
-              Loading...
+              No Active Flood Risk
             </div>
           </div>
 
@@ -515,11 +515,29 @@
         });
       }
 
-      function mockFloodWarning() {
+      const testFloodSequence = ["MINOR", "MODERATE", "MAJOR"];
+      let testFloodIndex = 0;
+
+      function resetGaugeToNoWarning() {
         updateGauge({
-          status: "MAJOR",
-          eventType: "Major Flood Warning for Test Region",
-          severity: "Major flood",
+          status: "SAFE",
+          eventType: "No active flood warning",
+          severity: "No warning",
+          certainty: "Demo data",
+          urgency: "No action required",
+          areaName: "Melbourne",
+          expirationTime: "-"
+        });
+      }
+
+      function mockFloodWarning() {
+        const status = testFloodSequence[testFloodIndex];
+        testFloodIndex = (testFloodIndex + 1) % testFloodSequence.length;
+
+        updateGauge({
+          status,
+          eventType: `${formatSeverityLabel(status)} warning for Test Region`,
+          severity: formatSeverityLabel(status),
           certainty: "Test data",
           urgency: "Check official BOM warning",
           areaName: "Test Region",
@@ -531,10 +549,8 @@
       }
 
       document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById("refreshGauge").addEventListener("click", loadFloodAlert);
+        document.getElementById("refreshGauge").addEventListener("click", resetGaugeToNoWarning);
         document.getElementById("testFloodGauge").addEventListener("click", mockFloodWarning);
-        loadFloodAlert();
-        setInterval(loadFloodAlert, 3000);
       });
     </script>
   </section>
