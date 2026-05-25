@@ -308,6 +308,7 @@
         "https://corsproxy.io/?" + encodeURIComponent(
           "https://reg.bom.gov.au/fwo/IDZ00066.warnings_land_vic.xml"
         );
+      const SENSOR_DATA_URL = "/api/sensor-data";
 
       const severityToAngle = {
         SAFE: "-90deg",
@@ -372,6 +373,39 @@
         };
       }
 
+      async function fetchSensorFloodAlert() {
+        const response = await fetch(SENSOR_DATA_URL, { cache: "no-store" });
+
+        if (!response.ok) {
+          throw new Error(`Sensor API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const rainfall = Number(data.rainfall || 0);
+        const waterLevel = Number(data.waterLevel || 0);
+        const severity = getSensorSeverity(rainfall, waterLevel);
+
+        return {
+          status: severity,
+          eventType: data.alert === "Flood Alert" ? "Flood risk detected" : "No active flood warning",
+          severity: formatSeverityLabel(severity),
+          certainty: data.source || "Backend sensor data",
+          urgency: severity === "SAFE" ? "No action required" : "Monitor conditions and check official BOM advice",
+          areaName: "Melbourne",
+          expirationTime: formatTime(data.timestamp),
+          rainfall,
+          waterLevel
+        };
+      }
+
+      function getSensorSeverity(rainfall, waterLevel) {
+        if (rainfall >= 15 || waterLevel >= 70) return "MAJOR";
+        if (rainfall >= 10 || waterLevel >= 40) return "MODERATE";
+        if (rainfall >= 1 || waterLevel >= 10) return "MINOR";
+
+        return "SAFE";
+      }
+
       function getFloodSeverity(text) {
         const lower = text.toLowerCase();
 
@@ -408,7 +442,7 @@
 
       async function loadFloodAlert() {
         try {
-          const alert = await fetchFloodAlert();
+          const alert = await fetchSensorFloodAlert();
           updateGauge(alert);
         } catch (error) {
           console.error(error);
@@ -498,6 +532,7 @@
         document.getElementById("refreshGauge").addEventListener("click", loadFloodAlert);
         document.getElementById("testFloodGauge").addEventListener("click", mockFloodWarning);
         loadFloodAlert();
+        setInterval(loadFloodAlert, 10000);
       });
     </script>
   </section>

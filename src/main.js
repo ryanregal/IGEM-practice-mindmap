@@ -3,7 +3,7 @@ import './main.css'
 // Function to fetch sensor data from backend
 async function fetchSensorData() {
   try {
-    const response = await fetch('/api/sensor-data');
+    const response = await fetch('/api/sensor-data', { cache: 'no-store' });
     const data = await response.json();
     updateSensorDisplay(data);
   } catch (error) {
@@ -30,12 +30,17 @@ function updateSensorDisplay(data) {
 // App initialization
 document.addEventListener('DOMContentLoaded', () => {
   console.log('APP initialized')
-  
-  // Fetch initial sensor data
-  fetchSensorData();
-  
-  // Update sensor data every 30 seconds
-  setInterval(fetchSensorData, 30000);
+
+  const hasSensorDisplay = ['waterLevel', 'temperature', 'rainfall', 'alert']
+    .some(id => document.getElementById(id))
+
+  if (hasSensorDisplay) {
+    // Fetch initial sensor data
+    fetchSensorData();
+
+    // Update sensor data every 10 seconds
+    setInterval(fetchSensorData, 10000);
+  }
   
   // Navigation menu toggle
   const navToggle = document.querySelector('.nav-toggle')

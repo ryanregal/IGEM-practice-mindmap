@@ -3,8 +3,15 @@ const axios = require('axios');
 const cors = require('cors');
 
 const app = express();
+app.disable('etag');
 app.use(cors());
 app.use(express.json());
+app.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.set('Pragma', 'no-cache');
+  res.set('Expires', '0');
+  next();
+});
 
 // Initialize cached data
 let cachedData = {
@@ -18,6 +25,12 @@ let cachedData = {
 
 // BOM API URL for Melbourne (IDV60901 is Melbourne CBD)
 const BOM_API_URL = 'http://www.bom.gov.au/fwo/IDV60901/IDV60901.95936.json';
+const simulatedRiskCycle = [
+  { rainfall: 3, waterLevel: 20, alert: 'Normal' },
+  { rainfall: 11, waterLevel: 45, alert: 'Flood Alert' },
+  { rainfall: 18, waterLevel: 78, alert: 'Flood Alert' }
+];
+let simulatedRiskIndex = 0;
 
 /**
  * Fetch and parse BOM data, then update cached data
@@ -63,17 +76,20 @@ async function fetchBOMData() {
     console.error('⚠️  BOM API error:', error.message);
     console.log('📊 Using simulated data instead...');
     
-    // Fallback to realistic simulated data
-    const rainfall = Math.random() * 20;
+    // Fallback demo data cycles through minor, moderate, and major risk.
+    const simulatedRisk = simulatedRiskCycle[simulatedRiskIndex];
+    simulatedRiskIndex = (simulatedRiskIndex + 1) % simulatedRiskCycle.length;
+
+    const rainfall = simulatedRisk.rainfall;
     const temperature = 15 + Math.random() * 10;
-    const waterLevel = rainfall > 0 ? (rainfall / 5) * 10 + (Math.random() - 0.5) * 5 : Math.random() * 30;
+    const waterLevel = simulatedRisk.waterLevel;
 
     cachedData = {
       rainfall: parseFloat(rainfall.toFixed(2)),
-      waterLevel: parseFloat(Math.max(0, Math.min(100, waterLevel)).toFixed(2)),
+      waterLevel: parseFloat(waterLevel.toFixed(2)),
       temperature: parseFloat(temperature.toFixed(2)),
-      alert: rainfall > 10 ? 'Flood Alert' : 'Normal',
-      led: rainfall > 10 ? 'on' : 'off',
+      alert: simulatedRisk.alert,
+      led: simulatedRisk.alert === 'Flood Alert' ? 'on' : 'off',
       timestamp: new Date().toISOString(),
       source: 'Simulated'
     };
@@ -84,8 +100,8 @@ async function fetchBOMData() {
 // Perform initial fetch
 fetchBOMData();
 
-// Update every 30 seconds (30000 ms) to match frontend polling interval
-setInterval(fetchBOMData, 30000);
+// Update every 10 seconds (10000 ms) to match frontend polling interval
+setInterval(fetchBOMData, 10000);
 
 /**
  * Main sensor data endpoint - for both frontend and Arduino
